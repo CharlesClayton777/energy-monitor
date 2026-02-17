@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate, login, logout
 from django.db.models import Count, Avg
 from django.db.models.functions import TruncDate
 from rest_framework import generics, filters
@@ -154,3 +155,30 @@ class FileUploadView(APIView):
 
         finally:
             os.unlink(tmp_path)
+
+
+class LoginView(APIView):
+    """Log in with username and password."""
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return Response({'username': user.username})
+        return Response({'error': 'Invalid credentials'}, status=401)
+
+
+class LogoutView(APIView):
+    """Log out the current user."""
+    def post(self, request):
+        logout(request)
+        return Response({'message': 'Logged out'})
+
+
+class CurrentUserView(APIView):
+    """Check if user is logged in."""
+    def get(self, request):
+        if request.user.is_authenticated:
+            return Response({'username': request.user.username})
+        return Response({'username': None}, status=401)

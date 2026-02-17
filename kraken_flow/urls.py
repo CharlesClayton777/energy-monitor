@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import path
+from django.contrib.auth import views as auth_views
 
 from meter_readings.api_views import (
     ReadingListView,
@@ -9,6 +10,9 @@ from meter_readings.api_views import (
     FlowFileListView,
     StatsView,
     FileUploadView,
+    LoginView,
+    LogoutView,
+    CurrentUserView,
 )
 
 urlpatterns = [
@@ -20,4 +24,7 @@ urlpatterns = [
     path('api/files/', FlowFileListView.as_view()),
     path('api/stats/', StatsView.as_view()),
     path('api/upload/', FileUploadView.as_view()),
+    path('api/login/', LoginView.as_view()),
+    path('api/logout/', LogoutView.as_view()),
+    path('api/user/', CurrentUserView.as_view()),
 ]
